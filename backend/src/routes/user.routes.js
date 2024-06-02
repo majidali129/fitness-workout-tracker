@@ -7,7 +7,10 @@ PUT /users/me - Update the current user's profile
  */
 
 import express from 'express';
-import { registerUserValidator } from '../validators/user.validators.js';
+import {
+  loginUserValidator,
+  registerUserValidator,
+} from '../validators/user.validators.js';
 import { mongoIdFromPathValidator } from '../validators/mongodb.validator.js';
 import {
   registerUser,

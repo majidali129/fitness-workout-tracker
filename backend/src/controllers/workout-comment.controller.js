@@ -6,5 +6,6 @@ import { WorkoutComment } from '../models/workout-comment.model.js';
 const addNewComment = asyncHandler(async (req, res, next) => {});
 const updateComment = asyncHandler(async (req, res, next) => {});
 const deleteComment = asyncHandler(async (req, res, next) => {});
+const getAllComments = asyncHandler(async (req, res, next) => {});
 
-export { addNewComment, updateComment, deleteComment };
+export { addNewComment, updateComment, deleteComment, getAllComments };

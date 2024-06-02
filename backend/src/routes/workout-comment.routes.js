@@ -13,6 +13,7 @@ import {
   addNewComment,
   updateComment,
   deleteComment,
+  getAllComments,
 } from '../controllers/workout-comment.controller.js';
 
 const router = express.Router({ mergeParams: true });
@@ -29,4 +30,5 @@ router
 router
   .route('/:commentId')
   .delete(mongoIdFromPathValidator('commentId'), deleteComment);
+
 export default router;

@@ -4,6 +4,7 @@ GET /reports/workouts - Get a report of the current user's past workouts, includ
  */
 
 import express from 'express';
+import { getAllWorkoutsReport } from '../controllers/workout.controller.js';
 
 const router = express.Router();
 

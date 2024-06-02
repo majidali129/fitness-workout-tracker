@@ -8,5 +8,13 @@ const updateWorkout = asyncHandler(async (req, res, next) => {});
 const deleteWorkout = asyncHandler(async (req, res, next) => {});
 const getAllWorkouts = asyncHandler(async (req, res, next) => {});
 const getWorkout = asyncHandler(async (req, res, next) => {});
+const getAllWorkoutsReport = asyncHandler(async (req, res, next) => {});
 
-export { addNewWorkout, updateWorkout, deleteWorkout, getWorkout, getAllWorkouts };
+export {
+  addNewWorkout,
+  updateWorkout,
+  deleteWorkout,
+  getWorkout,
+  getAllWorkouts,
+  getAllWorkoutsReport,
+};

@@ -10,6 +10,13 @@ DELETE /workouts/:id - Delete a workout (for admin users)
 import express from 'express';
 import { mongoIdFromPathValidator } from '../validators/mongodb.validator.js';
 import { addNewWorkoutValidator } from '../validators/workout.validators.js';
+import {
+  addNewWorkout,
+  updateWorkout,
+  deleteWorkout,
+  getWorkout,
+  getAllWorkouts,
+} from '../controllers/workout.controller.js';
 
 const router = express.Router();
 

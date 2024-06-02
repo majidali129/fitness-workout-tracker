@@ -1,5 +1,5 @@
 import { body } from 'express-validator';
-import { User } from '../models/user.model';
+import { User } from '../models/user.model.js';
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 export const registerUserValidator = () => {

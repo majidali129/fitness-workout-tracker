@@ -9,6 +9,14 @@ DELETE /exercises/:id - Delete an exercise (for admin users)
 
 import express from 'express';
 import { addNewExerciseValidator } from '../validators/exercise.validators.js';
+import { mongoIdFromPathValidator } from '../validators/mongodb.validator.js';
+import {
+  addNewExercise,
+  updateExercise,
+  deleteExercise,
+  getExercise,
+  getAllExercises,
+} from '../controllers/exercise.controller.js';
 
 const router = express.Router();
 
