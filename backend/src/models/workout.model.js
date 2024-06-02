@@ -49,9 +49,10 @@ const workoutSchema = Schema(
     durationInMinutes: {
       type: Number,
       required: true,
+      default: 0,
     },
     caloriesBurned: {
-      type: String,
+      type: Number,
       required: true,
     },
     isCompleted: {
