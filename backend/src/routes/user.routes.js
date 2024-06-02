@@ -10,6 +10,7 @@ import express from 'express';
 import {
   loginUserValidator,
   registerUserValidator,
+  updateUserProfileValidator,
 } from '../validators/user.validators.js';
 import { mongoIdFromPathValidator } from '../validators/mongodb.validator.js';
 import {
@@ -18,18 +19,25 @@ import {
   updateUserProfile,
   deleteUser,
   getCurrentUser,
-  getAllUsers,
 } from '../controllers/auth.controller.js';
+import { upload } from '../middlewares/multer.middleware.js';
+import { validate } from '../validators/validate.js';
+import { verifyJWT } from '../middlewares/verifyJWT.middleware.js';
 
 const router = express.Router();
 
-router.route('/').get(getAllUsers);
-router.route('/me').get(getCurrentUser);
-router.route('/register').post(registerUserValidator(), registerUser);
-router.route('/login').post(loginUserValidator(), loginUser);
+router
+  .route('/register')
+  .post(registerUserValidator, upload.single('avatar'), registerUser);
+router.route('/login').post(loginUserValidator, validate, loginUser);
+router.route('/me').get(verifyJWT, getCurrentUser);
 router
   .route('/:id')
-  .patch(registerUserValidator(), mongoIdFromPathValidator('id'), updateUserProfile)
+  .patch(
+    updateUserProfileValidator,
+    mongoIdFromPathValidator('id'),
+    updateUserProfile
+  )
   .delete(mongoIdFromPathValidator('id'), deleteUser);
 
 export default router;

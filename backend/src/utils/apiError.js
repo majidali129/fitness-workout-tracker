@@ -17,7 +17,7 @@ export class apiError extends Error {
     if (stack) {
       this.stack = stack;
     } else {
-      Error.captureStackTrack(this, this.constructor);
+      Error.captureStackTrace(this, this.constructor);
     }
   }
 }
