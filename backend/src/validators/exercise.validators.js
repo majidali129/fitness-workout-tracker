@@ -21,21 +21,25 @@ export const addNewExerciseValidator = () => {
       .trim()
       .custom((value) => {
         if (!value) return true;
-        if (difficultyLevels.some((level) => value === level)) {
+        if (difficultyLevels.some((level) => value !== level)) {
           return Promise.reject(
             'difficulty level can be either eary, medium or hard'
           );
         }
       }),
-    body('muscleGroupt'),
-    body('videoUrl')
+    body('muscleGroup')
       .isString()
       .notEmpty()
-      .withMessage('exercise video source is required'),
+      .withMessage('please select muscle group for exercise'),
+    // body('videoUrl')
+    //   .isString()
+    //   .optional()
+    //   .notEmpty()
+    //   .withMessage('exercise video source is required'),
     body('caloriesPerMinute')
-      .isNumeric()
-      .withMessage('enter calories in number')
       .notEmpty()
-      .withMessage('calories field is required'),
+      .withMessage('calories field is required')
+      .isNumeric()
+      .withMessage('enter calories in number'),
   ];
 };

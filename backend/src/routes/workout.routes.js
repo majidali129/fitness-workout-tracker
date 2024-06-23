@@ -16,12 +16,16 @@ import {
   deleteWorkout,
   getWorkout,
   getAllWorkouts,
+  getAllWorkoutsReport,
 } from '../controllers/workout.controller.js';
+import { verifyJWT } from '../middlewares/verifyJWT.middleware.js';
 
 const router = express.Router();
+router.use(verifyJWT);
 
 router.route('/').get(getAllWorkouts);
-router.route('/register').post(addNewWorkoutValidator(), addNewWorkout);
+router.route('/progress').get(getAllWorkoutsReport);
+router.route('/newWorkout').post(addNewWorkoutValidator(), addNewWorkout);
 router
   .route('/:id')
   .patch(addNewWorkoutValidator(), mongoIdFromPathValidator('id'), updateWorkout)

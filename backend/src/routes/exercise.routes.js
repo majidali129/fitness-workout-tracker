@@ -17,15 +17,31 @@ import {
   getExercise,
   getAllExercises,
 } from '../controllers/exercise.controller.js';
+import { upload } from '../middlewares/multer.middleware.js';
 
 const router = express.Router();
 
-router.route('/').get(getAllExercises);
-router.route('/register').post(addNewExerciseValidator(), addNewExercise);
+router.route('/addExercise').post(upload.single('image'), addNewExercise);
+// router.route('/addExercise').post(
+//   addNewExerciseValidator(),
+//   upload.fields([
+//     {
+//       name: 'coverImage',
+//       maxCount: 1,
+//     },
+//     {
+//       name: 'exerciseVideo',
+//       maxCount: 1,
+//     },
+//   ]),
+//   addNewExercise
+// );
 router
   .route('/:id')
-  .patch(addNewExerciseValidator(), mongoIdFromPathValidator('id'), updateExercise)
+  .patch(mongoIdFromPathValidator('id'), updateExercise)
   .delete(mongoIdFromPathValidator('id'), deleteExercise)
-  .get(getExercise);
+  .get(mongoIdFromPathValidator('id'), getExercise);
+
+router.route('/').get(getAllExercises);
 
 export default router;

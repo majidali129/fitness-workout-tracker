@@ -15,10 +15,8 @@ const generateAccessRefreshToken = async (userId) => {
 
   return { accessToken, refreshToken };
 };
+
 const registerUser = asyncHandler(async (req, res, next) => {
-  console.log(req.body);
-  const errors = validationResult(req);
-  console.log(errors);
   const { username, fullName, email, password } = req.body;
   // get user data
   // validate request => done by validator

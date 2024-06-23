@@ -24,10 +24,10 @@ export const registerUserValidator = [
       return true;
     }),
   body('password')
-    .isString()
-    .withMessage('password must be string')
     .notEmpty()
     .withMessage('password is required')
+    .isString()
+    .withMessage('password must be string')
     .isLength({ min: 8 })
     .withMessage('password must be 8 characters long'),
 ];

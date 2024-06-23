@@ -21,6 +21,7 @@ const workoutSchema = Schema(
           ref: 'Exercise',
         },
       ],
+      default: [],
     },
     workoutType: {
       type: String,
@@ -72,4 +73,5 @@ const workoutSchema = Schema(
   { timestamps: true }
 );
 
+workoutSchema.index({ user: 1, startTime: 1, endTime: 1 }, { unique: true });
 export const Workout = mongoose.model('Workout', workoutSchema);
