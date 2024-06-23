@@ -14,15 +14,6 @@ const workoutSchema = Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
-    exercises: {
-      type: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: 'Exercise',
-        },
-      ],
-      default: [],
-    },
     workoutType: {
       type: String,
       enum: {
@@ -32,6 +23,15 @@ const workoutSchema = Schema(
           workoutTypeEnum
         ).join(' ')}`,
       },
+    },
+    exercises: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'Exercise',
+        },
+      ],
+      default: [],
     },
     workoutIntensity: {
       type: String,

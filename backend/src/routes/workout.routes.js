@@ -10,6 +10,7 @@ DELETE /workouts/:id - Delete a workout (for admin users)
 import express from 'express';
 import { mongoIdFromPathValidator } from '../validators/mongodb.validator.js';
 import { addNewWorkoutValidator } from '../validators/workout.validators.js';
+import workoutCommentRouter from './workout-comment.routes.js';
 import {
   addNewWorkout,
   updateWorkout,
@@ -21,6 +22,9 @@ import {
 import { verifyJWT } from '../middlewares/verifyJWT.middleware.js';
 
 const router = express.Router();
+router.use('/:workoutId/comments', workoutCommentRouter);
+router.use('/:workoutId/comments/:commentId', workoutCommentRouter);
+
 router.use(verifyJWT);
 
 router.route('/').get(getAllWorkouts);

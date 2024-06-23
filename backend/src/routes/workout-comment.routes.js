@@ -9,16 +9,18 @@ DELETE /workouts/:id/comments/:commentId - Delete a workout comment
 import express from 'express';
 import { mongoIdFromPathValidator } from '../validators/mongodb.validator.js';
 import { workoutCommentValidator } from '../validators/workout-comment.validators.js';
+import { verifyJWT } from '../../src/middlewares/verifyJWT.middleware.js';
 import {
   addNewComment,
   updateComment,
   deleteComment,
-  getAllComments,
 } from '../controllers/workout-comment.controller.js';
 
 const router = express.Router({ mergeParams: true });
 
-router.route('/').get(getAllComments).post(workoutCommentValidator(), addNewComment);
+router.use(verifyJWT);
+router.route('/').post(workoutCommentValidator(), addNewComment);
+
 router
   .route('/:commentId')
   .patch(

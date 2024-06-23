@@ -20,6 +20,6 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/exercises', exerciseRouter);
 app.use('/api/v1/report', reportRouter);
 app.use('/api/v1/workouts', workoutRouter);
-app.use('/api/v1/workout-comment', workoutCommentRouter);
+app.use('/api/v1/comments', workoutCommentRouter);
 
 app.use(globalErrorHandler);
