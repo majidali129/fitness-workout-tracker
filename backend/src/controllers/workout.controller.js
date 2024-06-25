@@ -23,17 +23,18 @@ const addNewWorkout = asyncHandler(async (req, res, next) => {
       {
         startTime: { $gte: startTime },
         endTime: { $gte: endTime },
+        isCompleted: false,
       },
     ],
   });
 
-  if (existingWorkout)
-    return next(
-      new apiError(
-        400,
-        'You already have a workout within this start and end time. Please select some other duration'
-      )
-    );
+  // if (existingWorkout)
+  //   return next(
+  //     new apiError(
+  //       400,
+  //       'You already have a workout within this start and end time. Please select some other duration'
+  //     )
+  //   );
 
   // GET IDs OF EXERCISES, SELECTED BY CLIENT
   const exercisesIds = await Exercise.find(
@@ -134,7 +135,139 @@ const getWorkout = asyncHandler(async (req, res, next) => {
     .json(new apiResponse(200, workout, 'workout fetched successfully'));
 });
 
-const getAllWorkoutsReport = asyncHandler(async (req, res, next) => {});
+// AGGREGATION PIPELINES FOR REPORT DATA
+async function getAllCompleted() {
+  const allCompleted = await Workout.aggregate([
+    {
+      $match: {
+        isCompleted: true,
+      },
+    },
+  ]);
+
+  return allCompleted;
+}
+async function getAllPending() {
+  const allPending = await Workout.aggregate([
+    {
+      $match: {
+        isCompleted: false,
+        startTime: {
+          $gt: new Date(),
+        },
+      },
+    },
+    {
+      $sort: {
+        startTime: 1,
+      },
+    },
+    {
+      $limit: 3,
+    },
+  ]);
+
+  return allPending;
+}
+
+async function getAllWeeklyCompleted() {
+  const weeklyCompleted = await Workout.aggregate([
+    {
+      $match: {
+        isCompleted: true,
+        $and: [
+          {
+            endTime: {
+              $gte: new Date(new Date().setDate(new Date().getDate() - 7)),
+              $lt: new Date(),
+            },
+          },
+        ],
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalCompleted: {
+          $sum: 1,
+        },
+        workoutsOfWeek: {
+          $push: '$$ROOT',
+        },
+      },
+    },
+  ]);
+
+  return weeklyCompleted;
+}
+async function getAllCompletedFromLast3Days() {
+  const weeklyCompleted = await Workout.aggregate([
+    {
+      $match: {
+        isCompleted: true,
+        $and: [
+          {
+            endTime: {
+              $gte: new Date(new Date().setDate(new Date().getDate() - 3)),
+              $lt: new Date(),
+            },
+          },
+        ],
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalCompleted: {
+          $sum: 1,
+        },
+        workoutsOfWeek: {
+          $push: '$$ROOT',
+        },
+      },
+    },
+  ]);
+
+  return weeklyCompleted;
+}
+
+const getAllWorkoutsReport = asyncHandler(async (req, res, next) => {
+  const [
+    allWorkouts,
+    completedWorkouts,
+    weeklyCompleted,
+    threeDaysCompleted,
+    nextPending,
+  ] = await Promise.all([
+    Workout.find(),
+    getAllCompleted(),
+    getAllWeeklyCompleted(),
+    getAllCompletedFromLast3Days(),
+    getAllPending(),
+  ]);
+  const percentage = ((completedWorkouts.length / allWorkouts.length) * 100).toFixed(
+    2
+  );
+  const finalReportData = {
+    owner: req.user,
+    allWorkouts,
+    percentageByComplete: +percentage,
+    completedWorkouts,
+    weeklyCompleted,
+    threeDaysCompleted,
+    nextPending,
+  };
+
+  res
+    .status(200)
+    .json(
+      new apiResponse(
+        200,
+        finalReportData,
+        'report data for workouts fetched successfully'
+      )
+    );
+});
 
 export {
   addNewWorkout,
