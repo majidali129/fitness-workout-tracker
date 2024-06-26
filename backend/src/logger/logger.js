@@ -1,4 +1,5 @@
-import winston from 'winston';
+import { createLogger, format, transports, addColors } from 'winston';
+const { combine, timestamp, json, colorize } = format;
 
 const levels = {
   error: 0,
@@ -22,24 +23,27 @@ const colors = {
   debug: 'white',
 };
 
-winston.addColors(colors);
+addColors(colors);
 
-const format = winston.format.combine(
-  // Add the message timestamp with the preferred format
-  winston.format.timestamp({ format: 'DD MMM, YYYY - HH:mm:ss:ms' }),
-  // Tell Winston that the logs must be colored
-  winston.format.colorize({ all: true }),
-  // Define the format of the message showing the timestamp, the level and the message
-  winston.format.printf(
-    (info) => `[${info.timestamp}] ${info.level}: ${info.message}`
-  )
+// Custom format for console logging with colors
+const consoleLogFormat = format.combine(
+  timestamp({ format: 'DD MMM, YYYY - HH:mm:ss:ms' }),
+  format.colorize(),
+  format.printf(({ level, message, timestamp }) => {
+    return `${level}: ${message}`;
+  })
 );
 
-const transports = [new winston.transports.Console()];
-
-export const logger = winston.createLogger({
+// Create a Winston logger
+const logger = createLogger({
   level: level(),
   levels,
-  format,
-  transports,
+  format: combine(colorize(), timestamp(), json()),
+  transports: [
+    new transports.Console({
+      format: consoleLogFormat,
+    }),
+  ],
 });
+
+export { logger };
